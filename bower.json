@@ -1,10 +1,10 @@
 {
-  "name": "HOMER",
+  "name": "referrals_manager",
   "version": "1.7.0",
   "authors": [
-    "Damian Dudziak - WebAppLayers"
+    "Chris Ekin"
   ],
-  "description": "HOMER - AngularJS WebApp Theme",
+  "description": "Referrals manager for HSL",
   "main": "app/index.html",
   "private": true,
   "ignore": [
