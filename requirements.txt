@@ -1,2 +1,4 @@
 Django==1.10.2
+django-mssql==1.7
 djangorestframework==3.4.7
+PyMySQL==0.7.9
