@@ -1,11 +1,11 @@
 /**
- * HOMER - Responsive Admin Theme
+ * Referrals Manager
  * version 1.7
- *
+ * Config: Routing
  */
 
 function configState($stateProvider, $urlRouterProvider, $compileProvider) {
-
+    
     // Optimize load start with remove binding information inside the DOM element
     $compileProvider.debugInfoEnabled(true);
 
@@ -40,7 +40,9 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
             data: {
                 pageTitle: 'Library Search',
                 pageDesc: 'Search for an assay from the system libraries.'
-            }
+            },
+            controller: 'searchCtrl',
+            controllerAs: 'form'
         });
 
 

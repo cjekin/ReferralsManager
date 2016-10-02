@@ -34,12 +34,12 @@
             </div>
         </div>
     </div>
-    <div class="content">
+    <div class="content" ng-controller="contentCtrl">
         <div ui-view></div>
     </div>
 
     <!-- Right sidebar -->
-    <div id="right-sidebar" ng-include="'views/common/right_sidebar.html'" class="sidebar-open" ng-show="rightSidebar"></div>
+    <!--<div id="right-sidebar" ng-include="'views/common/right_sidebar.html'" class="sidebar-open" ng-show="rightSidebar"></div>-->
 
     <!-- Footer -->
     <footer class="footer" ng-include="'views/common/footer.html'"></footer>
