@@ -88,6 +88,7 @@ class GlobalCodes_REFLABS(models.Model):
         
 
 class GlobalCodes_LabGuide(models.Model):
+    mapid = models.ForeignKey('GlobalCodes_Map', models.SET_NULL, blank=True, null=True,)
     sample_type = models.CharField(max_length=50)
     published_tat = models.CharField(max_length=20)
     volume_ml = models.DecimalField(max_digits=6, decimal_places=3)
