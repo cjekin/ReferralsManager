@@ -4,7 +4,7 @@ from django.db import models
 
 # Create your models here.
 
-class GlobalCodes_TEST(models.Model):
+class GlobalCodes_TLC(models.Model):
     origin = models.CharField(max_length=20)
     tlc = models.CharField(max_length=4)
     tlctype = models.CharField(max_length=1)
@@ -12,7 +12,7 @@ class GlobalCodes_TEST(models.Model):
     fee1 = models.DecimalField(max_digits=6, decimal_places=2)
     
     class Meta:
-        db_table = "GlobalCodes_TEST"
+        db_table = "GlobalCodes_TLC"
     
     
 class GlobalCodes_Locations(models.Model):
@@ -72,7 +72,7 @@ class GlobalCodes_FLAT(models.Model):
     origin = models.CharField(max_length=20)
     tlc_code = models.CharField(max_length=4)
     tfc_code = models.CharField(max_length=4)
-    tlc = models.ForeignKey('GlobalCodes_TEST', models.SET_NULL, blank=True, null=True, )
+    tlc = models.ForeignKey('GlobalCodes_TLC', models.SET_NULL, blank=True, null=True, )
     tfc = models.ForeignKey('GlobalCodes_FORM', models.SET_NULL, blank=True, null=True, )
     
     class Meta:
