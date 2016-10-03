@@ -74,26 +74,43 @@ WSGI_APPLICATION = 'djangorestapi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'GlobalCodes',
+        'USER': 'djangouser',
+        'PASSWORD': 'refmanadmin',
+        'HOST': 'localhost',
+        'PORT': '3306'
+    }
+}
+
+# sqlserver_ado settings
 # DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'GlobalCodes',
-#        'USER': 'djangouser',
-#        'PASSWORD': 'refmanadmin',
-#        'HOST': 'localhost',
-#        'PORT': '3306'
+#     'default': {
+#         'NAME': 'GlobalCodes',
+#         'ENGINE': 'sqlserver_ado',
+#         'HOST': 'localhost\\SQLEXPRESS',
+#         'USER': 'djangouser',
+#         'PASSWORD': 'refmanadmin',
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'NAME': 'GlobalCodes',
-        'ENGINE': 'sqlserver_ado',
-        'HOST': 'localhost\\SQLEXPRESS',
-        'USER': 'djangouser',
-        'PASSWORD': 'refmanadmin',
-    }
-}
+# django-pyodbc-azure settings
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'sql_server.pyodbc',
+#         'NAME': 'mydb',
+#         'USER': 'user@myserver',
+#         'PASSWORD': 'password',
+#         'HOST': 'myserver.database.windows.net',
+#         'PORT': '',
+
+#         'OPTIONS': {
+#             'driver': 'ODBC Driver 13 for SQL Server',
+#         },
+#     },
+# }
 
 
 # Password validation
