@@ -39,7 +39,7 @@ class GlobalCodes_Locations(models.Model):
 class GlobalCodes_Map(models.Model):
     origin = models.CharField(max_length=20)
     tfc = models.CharField(max_length=4)
-    loinc = models.CharField(max_length=20)
+    loinc = models.ForeignKey('LOINC_Main', models.SET_NULL, blank=True, null=True,)
     container = models.CharField(max_length=50)
     loc1 = models.ForeignKey('GlobalCodes_Locations', models.SET_NULL, blank=True, null=True, related_name='loc1',)
     loc2 = models.ForeignKey('GlobalCodes_Locations', models.SET_NULL, blank=True, null=True, related_name='loc2',)
