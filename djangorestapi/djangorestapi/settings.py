@@ -74,6 +74,9 @@ WSGI_APPLICATION = 'djangorestapi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# Database
+# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -85,25 +88,14 @@ DATABASES = {
     }
 }
 
-# sqlserver_ado settings
-# DATABASES = {
-#     'default': {
-#         'NAME': 'GlobalCodes',
-#         'ENGINE': 'sqlserver_ado',
-#         'HOST': 'localhost\\SQLEXPRESS',
-#         'USER': 'djangouser',
-#         'PASSWORD': 'refmanadmin',
-#     }
-# }
-
 # django-pyodbc-azure settings
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'sql_server.pyodbc',
-#         'NAME': 'mydb',
-#         'USER': 'user@myserver',
-#         'PASSWORD': 'password',
-#         'HOST': 'myserver.database.windows.net',
+#         'NAME': 'GlobalCodes',
+#         'USER': 'djangouser',
+#         'PASSWORD': 'refmanadmin',
+#         'HOST': 'localhost\\SQLEXPRESS',
 #         'PORT': '',
 
 #         'OPTIONS': {
