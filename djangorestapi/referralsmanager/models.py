@@ -70,10 +70,10 @@ class GlobalCodes_FORM(models.Model):
     
 class GlobalCodes_FLAT(models.Model):
     origin = models.CharField(max_length=20)
-    librarycode = models.CharField(max_length=4)
-    form = models.CharField(max_length=4)
-    tlc = models.ForeignKey('GlobalCodes_TEST', models.SET_NULL, blank=True, null=True,)
-    tfc = models.ForeignKey('GlobalCodes_FORM', models.SET_NULL, blank=True, null=True,)
+    tlc_code = models.CharField(max_length=4)
+    tfc_code = models.CharField(max_length=4)
+    tlc = models.ForeignKey('GlobalCodes_TEST', models.SET_NULL, blank=True, null=True, )
+    tfc = models.ForeignKey('GlobalCodes_FORM', models.SET_NULL, blank=True, null=True, )
     
     class Meta:
         db_table = "GlobalCodes_FLAT"
