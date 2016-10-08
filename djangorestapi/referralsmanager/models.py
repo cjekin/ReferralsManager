@@ -1,57 +1,9 @@
-from __future__ import unicode_literals
-
 from django.db import models
 
-# Create your models here.
 
-class GlobalCodes_TLC(models.Model):
-    origin = models.CharField(max_length=20)
-    tlc = models.CharField(max_length=4)
-    tlctype = models.CharField(max_length=1)
-    tlcname = models.CharField(max_length=50)
-    fee1 = models.DecimalField(max_digits=6, decimal_places=2)
-    
-    class Meta:
-        db_table = "GlobalCodes_TLC"
-    
-    
-class GlobalCodes_Locations(models.Model):
-    subsectioncode = models.CharField(max_length=50)
-    subsection = models.CharField(max_length=100)
-    department = models.CharField(max_length=50)
-    location = models.CharField(max_length=100)
-    address = models.TextField()
-    postcode = models.CharField(max_length=20)
-    telephone = models.CharField(max_length=255)
-    contact = models.CharField(max_length=255)
-    url = models.CharField(max_length=255)
-    notes = models.TextField()
-    halo = models.BooleanField()
-    wsl = models.BooleanField()
-    referral = models.BooleanField()
-    dynamics_code = models.CharField(max_length=10)
-    active = models.BooleanField()
-    
-    class Meta:
-        db_table = "GlobalCodes_Locations"
-    
-    
-class GlobalCodes_Map(models.Model):
-    origin = models.CharField(max_length=20)
-    tfc = models.CharField(max_length=4)
-    loinc = models.ForeignKey('LOINC_Main', models.SET_NULL, blank=True, null=True,)
-    container = models.CharField(max_length=50)
-    loc1 = models.ForeignKey('GlobalCodes_Locations', models.SET_NULL, blank=True, null=True, related_name='loc1',)
-    loc2 = models.ForeignKey('GlobalCodes_Locations', models.SET_NULL, blank=True, null=True, related_name='loc2',)
-    form = models.ForeignKey('GlobalCodes_FORM', models.SET_NULL, blank=True, null=True,)
-    
-    result_type = models.CharField(max_length=20)
-    
-    class Meta:
-        db_table = "GlobalCodes_Map"
-        
-        
-class GlobalCodes_FORM(models.Model):
+
+
+class Form(models.Model):
     origin = models.CharField(max_length=20)
     tfc = models.CharField(max_length=4)
     wrksection = models.CharField(max_length=1)
@@ -59,7 +11,7 @@ class GlobalCodes_FORM(models.Model):
     units = models.CharField(max_length=20)
     functions = models.CharField(max_length=10)
     reflab = models.CharField(max_length=3)
-    ref = models.ForeignKey('GlobalCodes_REFLABS', models.SET_NULL, blank=True, null=True, )
+    ref = models.ForeignKey('Reflabs', models.SET_NULL, blank=True, null=True, )
     flags = models.CharField(max_length=10)
     repsection = models.CharField(max_length=1)
     dontwaitforme = models.CharField(max_length=1)
@@ -67,18 +19,51 @@ class GlobalCodes_FORM(models.Model):
     
     class Meta:
         db_table = "GlobalCodes_FORM"
+        unique_together = ('origin', 'tfc')
+        
+    def __str__(self):
+        return '{},{}'.format(self.origin,self.tfc)
+
+
+class TLC(models.Model):
+    origin = models.CharField(max_length=20)
+    tlc = models.CharField(max_length=4)
+    tlctype = models.CharField(max_length=1)
+    fixedprice = models.CharField(max_length=1, null=True)
+    printlabel = models.CharField(max_length=1, null=True)
+    specifiedprof = models.CharField(max_length=1, null=True)
+    securitylevel = models.IntegerField(null=True)
+    queryflag = models.CharField(max_length=1, null=True)
+    tlcname = models.CharField(max_length=25)
+    fee1 = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     
-class GlobalCodes_FLAT(models.Model):
+    tfcs = models.ManyToManyField(Form, through='Flat')
+    
+    class Meta:
+        db_table = "GlobalCodes_TLC"
+        unique_together = ('origin', 'tlc')
+        
+    def __str__(self):
+        return '{},{}'.format(self.origin,self.tlc)
+        
+        
+class Flat(models.Model):
     origin = models.CharField(max_length=20)
     tlc_code = models.CharField(max_length=4)
     tfc_code = models.CharField(max_length=4)
-    tlc = models.ForeignKey('GlobalCodes_TLC', models.SET_NULL, blank=True, null=True, )
-    tfc = models.ForeignKey('GlobalCodes_FORM', models.SET_NULL, blank=True, null=True, )
+    
+    tlc = models.ForeignKey('TLC')
+    tfc = models.ForeignKey('Form')
     
     class Meta:
         db_table = "GlobalCodes_FLAT"
+        unique_together = ('tlc','tfc')
         
-class GlobalCodes_REFLABS(models.Model):
+    def __str__(self):
+        return '{}->{}:{}'.format(self.tlc_code, self.tfc_code, self.tfc.testname)
+        
+        
+class Reflabs(models.Model):
     origin = models.CharField(max_length=20)
     reflab_code = models.CharField(max_length=5)
     reflab_name = models.CharField(max_length=50)
@@ -86,9 +71,50 @@ class GlobalCodes_REFLABS(models.Model):
     class Meta:
         db_table = "GlobalCodes_REFLABS"
         
+    def __str__(self):
+        return '{}: {}'.format(self.reflab_code, self.reflab_name)
+        
+    
+    
+class Locations(models.Model):
+    subsectioncode = models.CharField(max_length=50)
+    subsection = models.CharField(max_length=100)
+    department = models.CharField(max_length=50)
+    location = models.CharField(max_length=100)
+    address = models.TextField(blank=True)
+    postcode = models.CharField(max_length=20, blank=True)
+    telephone = models.CharField(max_length=255, blank=True)
+    contact = models.CharField(max_length=255, blank=True)
+    url = models.CharField(max_length=255, blank=True)
+    notes = models.TextField(blank=True)
+    halo = models.BooleanField()
+    wsl = models.BooleanField()
+    referral = models.BooleanField()
+    dynamics_code = models.CharField(max_length=10, blank=True)
+    active = models.BooleanField()
+    
+    class Meta:
+        db_table = "GlobalCodes_Locations"
+    
+    
+class Map(models.Model):
+    origin = models.CharField(max_length=20)
+    tfc = models.CharField(max_length=4)
+    loinc = models.ForeignKey('LOINC', models.SET_NULL, blank=True, null=True,)
+    container = models.CharField(max_length=50)
+    loc1 = models.ForeignKey('Locations', models.SET_NULL, blank=True, null=True, related_name='loc1',)
+    loc2 = models.ForeignKey('Locations', models.SET_NULL, blank=True, null=True, related_name='loc2',)
+    form = models.ForeignKey('Form', models.SET_NULL, blank=True, null=True,)
+    
+    result_type = models.CharField(max_length=20)
+    
+    class Meta:
+        db_table = "GlobalCodes_Map"
+        unique_together = ('origin', 'tfc')
+        
 
-class GlobalCodes_LabGuide(models.Model):
-    mapid = models.ForeignKey('GlobalCodes_Map', models.SET_NULL, blank=True, null=True,)
+class LabGuide(models.Model):
+    mapid = models.ForeignKey('Map', models.SET_NULL, blank=True, null=True,)
     sample_type = models.CharField(max_length=50)
     published_tat = models.CharField(max_length=20)
     volume_ml = models.DecimalField(max_digits=6, decimal_places=3)
@@ -104,7 +130,7 @@ class GlobalCodes_LabGuide(models.Model):
         db_table = "GlobalCodes_LabGuide"
     
     
-class LOINC_Main(models.Model):
+class LOINC(models.Model):
     LOINC_NUM = models.CharField(max_length=10, unique=True, db_index=True, primary_key=True,)
     COMPONENT = models.CharField(max_length=255)
     PROPERTY = models.CharField(max_length=30)
@@ -153,8 +179,63 @@ class LOINC_Main(models.Model):
     
     class Meta:
         db_table = "LOINC_Main"
+        
+    def __str__(self):
+        return self.LONG_COMMON_NAME
+        
+        
+        
+        
+# Learning stuff: Generic ManyToMany
+# https://docs.djangoproject.com/en/1.10/topics/db/examples/many_to_many/
+class Publication(models.Model):
+    title = models.CharField(max_length=30)
+
+    def __str__(self):              # __unicode__ on Python 2
+        return self.title
+
+    class Meta:
+        ordering = ('title',)
+
+class Article(models.Model):
+    headline = models.CharField(max_length=100)
+    publications = models.ManyToManyField(Publication)
+
+    def __str__(self):              # __unicode__ on Python 2
+        return self.headline
+
+    class Meta:
+        ordering = ('headline',)
     
 
+# Learning stuff: Custom link table ManyToMany
+# https://docs.djangoproject.com/en/1.10/ref/models/fields/#django.db.models.ManyToManyField
+
+class Person(models.Model):
+    name = models.CharField(max_length=50)
     
+    def __str__(self):
+        return self.name
+
+class Group(models.Model):
+    name = models.CharField(max_length=128)
+    members = models.ManyToManyField(
+        Person,
+        through='Membership',
+        through_fields=('group', 'person'),
+    )
+    
+    def __str__(self):
+        return self.name
+
+class Membership(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    inviter = models.ForeignKey(
+        Person,
+        on_delete=models.CASCADE,
+        related_name="membership_invites",
+    )
+    invite_reason = models.CharField(max_length=64)
     
 

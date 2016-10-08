@@ -1,0 +1,1 @@
+alter table GlobalCodes_FLAT add column `id` int unsigned primary KEY AUTO_INCREMENT;
