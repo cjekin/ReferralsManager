@@ -140,3 +140,6 @@ ENV/
 
 # mySQL config file
 mysql_config.cnf
+
+# Data dumps
+data.json
