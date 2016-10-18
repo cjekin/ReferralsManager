@@ -127,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # CORS and CSRF security
-# CORS_ORIGIN_ALLOW_ALL = True  
+CORS_ORIGIN_ALLOW_ALL = True  
 
 CORS_ALLOW_HEADERS = (
     'accept',
@@ -150,9 +150,9 @@ CORS_ALLOW_METHODS = (
     'PUT',
 )
 
-CORS_ORIGIN_WHITELIST = [
-    'http://referrals-manager-cjekin.c9users.io:8080/*',
-]
+#CORS_ORIGIN_WHITELIST = [
+#    'http://referrals-manager-cjekin.c9users.io:8080/*',
+#]
 
 CORS_ALLOW_CREDENTIALS = True
 

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from django.db.models import Q
+from django.contrib.auth import login, logout
 from . import models
 from . import serializers
 
@@ -15,18 +16,6 @@ from . import serializers
 # Authentication and security
 #
 
-# class LoginView(APIView):
-#     authentication_classes = (SessionAuthentication, BasicAuthentication)
-#     permission_classes = (IsAuthenticated,)
-
-#     def get(self, request, format=None):
-#         content = {
-#             'user': request.user,  # `django.contrib.auth.User` instance.
-#             'auth': request.auth,  # None
-#         }
-#         return Response(content)
-        
-
 class QuietBasicAuthentication(BasicAuthentication):
     # disclaimer: once the user is logged in, this should NOT be used as a
     # substitute for SessionAuthentication, which uses the django session cookie,
@@ -34,14 +23,14 @@ class QuietBasicAuthentication(BasicAuthentication):
     def authenticate_header(self, request):
         return 'xBasic realm="%s"' % self.www_authenticate_realm
 
-from django.contrib.auth import login, logout
- 
 class LoginView(APIView):
     authentication_classes = (QuietBasicAuthentication,)
  
     def post(self, request, *args, **kwargs):
+        print('Received details: ', request.user)
         login(request, request.user)
-        return Response(UserSerializer(request.user).data)
+        return 'Hello there'
+        #return Response(serializers.UserSerializer(request.user).data)
  
     def delete(self, request, *args, **kwargs):
         logout(request)
