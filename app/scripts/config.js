@@ -42,8 +42,34 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
                 pageDesc: 'Search for an assay from the system libraries.'
             },
             controller: 'searchCtrl',
-            controllerAs: 'form'
-        });
+            controllerAs: 'form',
+            resolve: {
+              user: function (authService) {
+                  return authService.getUserDetails();
+              }
+            }
+        })
+        
+        
+        // Common views
+        .state('common', {
+            abstract: true,
+            url: "/common",
+            templateUrl: "views/common/content_empty.html",
+            data: {
+                pageTitle: 'Common'
+            }
+        })
+        .state('common.login', {
+            url: "/login",
+            templateUrl: "views/common_app/login.html",
+            data: {
+                pageTitle: 'Login page',
+                specialClass: 'blank'
+            },
+            controller: 'loginCtrl',
+            controllerAs: 'loginCtrl'
+        })
 
 
 }

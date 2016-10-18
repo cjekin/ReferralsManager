@@ -95,12 +95,15 @@ class Locations(models.Model):
     
     class Meta:
         db_table = "GlobalCodes_Locations"
+        
+    def __str__(self):
+        return '{}, {}'.format(self.subsection,self.location)
     
     
 class Map(models.Model):
     origin = models.CharField(max_length=20)
     tfc = models.CharField(max_length=4)
-    loinc = models.ForeignKey('LOINC', models.SET_NULL, blank=True, null=True,)
+    loinc = models.ForeignKey('LOINC', models.SET_NULL, blank=True, null=True,related_name="loinc")
     container = models.CharField(max_length=50)
     loc1 = models.ForeignKey('Locations', models.SET_NULL, blank=True, null=True, related_name='loc1',)
     loc2 = models.ForeignKey('Locations', models.SET_NULL, blank=True, null=True, related_name='loc2',)
@@ -111,6 +114,9 @@ class Map(models.Model):
     class Meta:
         db_table = "GlobalCodes_Map"
         unique_together = ('origin', 'tfc')
+        
+    def __str__(self):
+        return '{}:{}'.format(self.origin,self.tfc)
         
 
 class LabGuide(models.Model):

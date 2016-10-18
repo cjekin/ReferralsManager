@@ -90,11 +90,16 @@
             <div class="col-lg-12">
                 <div class="hpanel">
                     <div class="panel-body">
+                        
+                        <pre>{{ form.data.count }}<br>{{ form.data.next }}<br>{{ form.data.prev }}<br>{{ form.data.results }}</pre>
+                        
                         <div class="table-responsive">
                             <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Assay</th>
+                                        <th>Origin</th>
+                                        <th>TLC</th>
+                                        <th>Name</th>
                                         <th>Sample</th>
                                         <th>Destination</th>
                                         <th>Winpath</th>
@@ -102,27 +107,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Copper</td>
-                                        <td>Serum</td>
+                                    <tr ng-repeat="row in form.data.results">
+                                        <td>{{ row.origin }}</td>
+                                        <td>{{ row.tlc }}</td>
+                                        <td>{{ row.tlcname }}</td>
                                         <td>Schottdorf</td>
                                         <td>TDL</td>
                                         <td></td>
                                     </tr>
-                                    <tr>
-                                        <td>Copper</td>
-                                        <td>Urine</td>
-                                        <td>Sheffield</td>
-                                        <td>Royal Free</td>
-                                        <td class="text-center"><i class="fa fa-dollar text-danger"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Copper</td>
-                                        <td>Serum</td>
-                                        <td>Trace Metal Unit, PHE</td>
-                                        <td>TDL</td>
-                                        <td class="text-center"><button class="btn btn-primary btn-xs">EDIT</button></td>
-                                    </tr>
+                                    <!--<tr>-->
+                                    <!--    <td>Copper</td>-->
+                                    <!--    <td>Urine</td>-->
+                                    <!--    <td>Sheffield</td>-->
+                                    <!--    <td>Royal Free</td>-->
+                                    <!--    <td class="text-center"><i class="fa fa-dollar text-danger"></i></td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                    <!--    <td>Copper</td>-->
+                                    <!--    <td>Serum</td>-->
+                                    <!--    <td>Trace Metal Unit, PHE</td>-->
+                                    <!--    <td>TDL</td>-->
+                                    <!--    <td class="text-center"><button class="btn btn-primary btn-xs">EDIT</button></td>-->
+                                    <!--</tr>-->
                                 </tbody>
                             </table>
                         </div>
