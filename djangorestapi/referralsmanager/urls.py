@@ -1,13 +1,14 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.views.decorators.csrf import csrf_exempt
 
 from . import views
 
 urlpatterns = [
     
-    #url(r'^getcsrf$', views.GetCSRF),
     
-    url(r'^login/$', views.LoginView.as_view(), name='login_view'),
+    url(r'auth/', include('knox.urls')),
+    
+    #url(r'^auth/login/$', csrf_exempt(views.FakeAuth.as_view()), name='login_view'),
     
     url(r'^tlcs/$', views.ListCreateTLC.as_view(), name='tlc_list'),
     url(r'^tlcs/(?P<pk>\d+)/$', 
@@ -24,6 +25,7 @@ urlpatterns = [
     url(r'^tfcs/(?P<pk>\d+)/$', views.RetrieveUpdateDestroyForm.as_view(), name='form_list'),
     
     #url(r'^search/(?P<search_text>.+)/$', csrf_exempt(views.ListTLC.as_view()), name='search_test'),
-    url(r'^search/$', csrf_exempt(views.ListTLC.as_view()), name='search_test'),
+    #url(r'^search/$', csrf_exempt(views.ListTLC.as_view()), name='search_test'),
+    url(r'^search/$', views.ListTLC.as_view(), name='search_test'),
     
     ]

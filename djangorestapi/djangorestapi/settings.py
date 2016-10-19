@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'corsheaders',
     'rest_framework',
+    'knox',
     'rest_framework.authtoken',
     'referralsmanager',
 ]
@@ -83,7 +84,7 @@ WSGI_APPLICATION = 'djangorestapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'GlobalCodes',
+        'NAME': 'GlobalCodes_New',
         'USER': 'djangouser',
         'PASSWORD': 'refmanadmin',
         'HOST': 'localhost',
@@ -180,6 +181,7 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),

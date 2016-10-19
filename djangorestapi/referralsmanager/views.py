@@ -1,40 +1,42 @@
 from rest_framework import generics, mixins, permissions, viewsets, status
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication, BaseAuthentication
-from rest_framework import exceptions
+#from rest_framework.authentication import SessionAuthentication, BasicAuthentication, BaseAuthentication
+#from rest_framework import exceptions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from django.db.models import Q
-from django.contrib.auth import login, logout
+#from django.contrib.auth import login, logout
 from . import models
 from . import serializers
 
-
+from knox.auth import TokenAuthentication
 
 #
 # Authentication and security
 #
 
-class QuietBasicAuthentication(BasicAuthentication):
-    # disclaimer: once the user is logged in, this should NOT be used as a
-    # substitute for SessionAuthentication, which uses the django session cookie,
-    # rather it can check credentials before a session cookie has been granted.
-    def authenticate_header(self, request):
-        return 'xBasic realm="%s"' % self.www_authenticate_realm
 
-class LoginView(APIView):
-    authentication_classes = (QuietBasicAuthentication,)
+
+# class QuietBasicAuthentication(BasicAuthentication):
+#     # disclaimer: once the user is logged in, this should NOT be used as a
+#     # substitute for SessionAuthentication, which uses the django session cookie,
+#     # rather it can check credentials before a session cookie has been granted.
+#     def authenticate_header(self, request):
+#         return 'xBasic realm="%s"' % self.www_authenticate_realm
+
+# class LoginView(APIView):
+#     #authentication_classes = (QuietBasicAuthentication,)
  
-    def post(self, request, *args, **kwargs):
-        print('Received details: ', request.user)
-        login(request, request.user)
-        return 'Hello there'
-        #return Response(serializers.UserSerializer(request.user).data)
+#     def post(self, request, *args, **kwargs):
+#         print('Received details: ' + str(request.user))
+#         login(request, request.user)
+#         return 'Hello there'
+#         #return Response(serializers.UserSerializer(request.user).data)
  
-    def delete(self, request, *args, **kwargs):
-        logout(request)
-        return Response({})
+#     def delete(self, request, *args, **kwargs):
+#         logout(request)
+#         return Response({})
 
 
 #class GetCSRF(Request):
@@ -48,6 +50,8 @@ class LoginView(APIView):
 
 
 class ListTLC(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.SearchPage_Serializer
 
     def get_queryset(self):
@@ -103,19 +107,34 @@ class RetrieveUpdateDestroyForm(generics.ListCreateAPIView):
 
 # A full view
 
-# from rest_framework import status
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
-class ListCreateTLCFull(APIView):
-    
-    def get(self, request, format=None):
-        tlcs = models.TLC.objects.all() #.filter(id=self.kwargs['pk'])
-        serializer = serializers.TLC_Serializer(tlcs, many=False)
-        return Response(serializer.data)
-        
-    def post(self, request, format=None):
-        serializer = serializers.TLC_Serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+from .request_log.mixins import RequestLogViewMixin
+
+class FakeAuth(RequestLogViewMixin,generics.ListAPIView):
+    print('Got a request for FakeAuth')
+    def post(self, request, *args, **kwargs):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#class FakeAuth(APIView):
+#    print('Got a request for FakeAuth')
+#    def post(self, request, *args, **kwargs):
+#        print(self.request.META.get('Authorization', 'No Authorization'))
+#        print(self.request.META.get('HTTP_SECRET_KEY', None))
+#    
+
+# class ListCreateTLCFull(APIView):
+    
+#     def get(self, request, format=None):
+#         tlcs = models.TLC.objects.all() #.filter(id=self.kwargs['pk'])
+#         serializer = serializers.TLC_Serializer(tlcs, many=False)
+#         return Response(serializer.data)
+        
+#     def post(self, request, format=None):
+#         print(request)
+#         serializer = serializers.TLC_Serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
