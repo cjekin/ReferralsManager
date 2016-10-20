@@ -10,7 +10,8 @@ function authService($http, $q, $window) {
     var userInfo;
     var sessionID;
 
-    var loginURL = 'https://referrals-manager-cjekin.c9users.io:8081/api/v1/auth/login/';
+    //var loginURL = 'https://referrals-manager-cjekin.c9users.io:8081/api/v1/auth/login/';
+    var loginURL = 'http://138.68.151.64:8081/api/v1/auth/login/';
 
     function login(username, password) {
         var deferred = $q.defer();

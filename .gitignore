@@ -143,3 +143,7 @@ mysql_config.cnf
 
 # Data dumps
 data.json
+
+# SSL Certs
+cert.crt
+cert.key
