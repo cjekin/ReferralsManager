@@ -116,7 +116,7 @@ from .request_log.mixins import RequestLogViewMixin
 class FakeAuth(RequestLogViewMixin,generics.ListAPIView):
     print('Got a request for FakeAuth')
     def post(self, request, *args, **kwargs):
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response('Hello', status=status.HTTP_201_CREATED)
 
 #class FakeAuth(APIView):
 #    print('Got a request for FakeAuth')
