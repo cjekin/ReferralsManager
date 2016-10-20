@@ -3,6 +3,7 @@ cryptography==1.5.2
 Django==1.10.2
 django-cors-headers==1.2.2
 django-debug-toolbar==1.6
+django-extensions==1.7.4
 django-pyodbc-azure==1.10.0.1
 django-rest-knox==2.2.0
 djangorestframework==3.4.7
@@ -16,3 +17,4 @@ pyOpenSSL==16.2.0
 requests==2.11.1
 six==1.10.0
 sqlparse==0.2.1
+Werkzeug==0.11.11
