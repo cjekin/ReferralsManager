@@ -1,8 +1,16 @@
 /**
  * Referrals Manager
- * version 1.7
+ * version 1.0
  * Config: Routing
  */
+
+angular
+    .module('homer')
+    .config(configState)
+    .run(function($rootScope, $state) {
+        $rootScope.$state = $state;
+    });
+    
 
 function configState($stateProvider, $urlRouterProvider, $compileProvider) {
     
@@ -41,12 +49,9 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
                 pageTitle: 'Library Search',
                 pageDesc: 'Search for an assay from the system libraries.'
             },
-            controller: 'searchCtrl',
-            controllerAs: 'form',
+            controller: 'searchCtrl as searchCtrl',
             resolve: {
-              user: function (authService) {
-                  return authService.getUserDetails();
-              }
+             auth: _redirectIfNotAuthenticated
             }
         })
         
@@ -74,9 +79,52 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
 
 }
 
-angular
-    .module('homer')
-    .config(configState)
-    .run(function($rootScope, $state) {
-        $rootScope.$state = $state;
-    });
+
+
+
+
+// function _redirectIfNotAuthenticated($q, $state, $auth) {
+//     var defer = $q.defer();
+//     if (authService.getSessionToken()) {
+//         defer.resolve(); /* (3) */
+//     }
+//     else {
+//         $timeout(function() {
+//             $state.go('login'); /* (4) */
+//         });
+//         defer.reject();
+//     }
+//     return defer.promise;
+// }
+
+
+function _redirectIfNotAuthenticated($q, $state, $timeout, authService) {
+    var userInfo = authService.isAuthenticated();
+    console.log('userInfo', userInfo);
+    if (userInfo) {
+        return $q.when(userInfo);
+    }
+    else {
+        $timeout(function() {
+            $state.go('common.login');
+        });
+        return $q.reject({
+            authenticated: false
+        });
+    }
+}
+
+
+
+
+// ['$q', '$state', '$timeout', 'authService', function ($q, $state, $timeout, authService) {
+//                   var userInfo = authService.getCurrentUser();
+//                   if (userInfo){
+//                       return $q.when(userInfo);
+//                   } else {
+//                       $timeout(function() {
+//                           $state.go('common.login');
+//                       });
+//                       return $q.reject({ authenticated: false });
+//                   }
+//               }]

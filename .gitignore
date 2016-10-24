@@ -147,3 +147,5 @@ data.json
 # SSL Certs
 cert.crt
 cert.key
+key.pem
+cert.pem

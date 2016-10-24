@@ -10,7 +10,7 @@
         ,'ui.bootstrap'             // AngularJS native directives for Bootstrap
         ,'ui.select'                // AngularJS ui-select
         ,'ngCookies'                // AngularJS Cookies
-        ,'ngResource'
+        //,'ngResource'
         //,'angular-flash.service'    // Message flash service used by authenticator (to be removed soon)
         //,'angular-flash.flash-alert-directive'
         //,'csrf-cross-domain'         // Third party lib for CSRF support

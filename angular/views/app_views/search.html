@@ -17,7 +17,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="checkbox checkbox-success">
-                                <input id="removeFilters" type="checkbox" ng-model="form.removeFilters">
+                                <input id="removeFilters" type="checkbox" ng-model="searchCtrl.removeFilters">
                                 <label for="removeFilters">
                                 Remove Filters
                             </label>
@@ -25,34 +25,34 @@
                         </div>
                     </div>
 
-                    <div class="form-group" ng-hide="form.removeFilters">
+                    <div class="form-group" ng-hide="searchCtrl.removeFilters">
                         <label class="control-label">Winpath:</label>
                         <div class="input-group">
-                            <ui-select multiple ng-model="form.selectedSystems" theme="bootstrap" ng-disabled="disabled">
+                            <ui-select multiple ng-model="searchCtrl.selectedSystems" theme="bootstrap" ng-disabled="disabled">
                                 <ui-select-match placeholder="Select systems...">{{ $item }}</ui-select-match>
-                                <ui-select-choices repeat="systems in form.allSystems | filter:$select.search">
+                                <ui-select-choices repeat="systems in searchCtrl.allSystems | filter:$select.search">
                                     {{ systems }}
                                 </ui-select-choices>
                             </ui-select>
                         </div>
                     </div>
 
-                    <div class="form-group" ng-hide="form.removeFilters">
+                    <div class="form-group" ng-hide="searchCtrl.removeFilters">
                         <label class="control-label">Sample:</label>
                         <div class="input-group">
                             <select class="form-control m-b"
-                                    ng-model="form.selectedSamples" 
-                                    ng-init="form.selectedSamples = form.allSamples[0]"
-                                    ng-options="option for option in form.allSamples">
+                                    ng-model="searchCtrl.selectedSamples" 
+                                    ng-init="searchCtrl.selectedSamples = searchCtrl.allSamples[0]"
+                                    ng-options="option for option in searchCtrl.allSamples">
                             </select>
                         </div>
                     </div>
 
-                    <div class="form-group" ng-hide="form.removeFilters">
+                    <div class="form-group" ng-hide="searchCtrl.removeFilters">
                         <label class="control-label">Options:</label>
                         <div class="input-group">
                             <div class="checkbox checkbox-success">
-                                <input checked id="checkbox1" type="checkbox" ng-model="form.useAlias">
+                                <input checked id="checkbox1" type="checkbox" ng-model="searchCtrl.useAlias">
                                 <label for="checkbox1">
                                 Use Alias Table
                             </label>
@@ -75,9 +75,9 @@
                 <div class="hpanel">
                     <div class="panel-body">
                         <div class="input-group">
-                            <input ng-model="form.searchText" class="form-control" type="text" placeholder="Search assays..">
+                            <input ng-model="searchCtrl.searchText" class="form-control" type="text" placeholder="Search assays..">
                             <div class="input-group-btn">
-                                <button ng-click="form.submit()" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                <button ng-click="searchCtrl.submit()" class="btn btn-default"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                 <div class="hpanel">
                     <div class="panel-body">
                         
-                        <pre>{{ form.data.count }}<br>{{ form.data.next }}<br>{{ form.data.prev }}<br>{{ form.data.results }}</pre>
+                        <pre>{{ searchCtrl.data.count }}<br>{{ searchCtrl.data.next }}<br>{{ searchCtrl.data.prev }}<br>{{ searchCtrl.data.results }}</pre>
                         
                         <div class="table-responsive">
                             <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped">
@@ -107,7 +107,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="row in form.data.results">
+                                    <tr ng-repeat="row in searchCtrl.data.results">
                                         <td>{{ row.origin }}</td>
                                         <td>{{ row.tlc }}</td>
                                         <td>{{ row.tlcname }}</td>
