@@ -22,8 +22,8 @@ function authService($http, $q, $window) {
     var session;
 
     var loginURL = 'https://referrals-manager-cjekin.c9users.io:8081/api/v1/auth/login/';
-    //var loginURL = 'http://138.68.151.64:8081/api/v1/auth/login/';
     //var loginURL = 'https://138.68.151.64:8081/api/v1/auth/login/';
+    //var loginURL = 'https://www.referralsmanager.co.uk:8081/api/v1/auth/login/';
 
     authService.login = function(username, password) {
         var deferred = $q.defer();
