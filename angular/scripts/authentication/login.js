@@ -31,6 +31,7 @@ function authService($http, $q, $window) {
         var queryURL = loginURL;
 
         $http.defaults.headers.common['Authorization'] = 'Basic ' + window.btoa(username + ':' + password);
+        $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
         $http.post(queryURL)
             .then(function(result) {
