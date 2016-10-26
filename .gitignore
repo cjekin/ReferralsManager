@@ -149,3 +149,6 @@ cert.crt
 cert.key
 key.pem
 cert.pem
+
+# Ignore Django static folder
+static/
