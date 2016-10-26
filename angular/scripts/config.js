@@ -24,7 +24,7 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
         // Dashboard - Main page
         .state('dashboard', {
             url: "/dashboard",
-            templateUrl: "views/dashboard.html",
+            templateUrl: "static/views/dashboard.html",
             data: {
                 pageTitle: 'Dashboard',
             }
@@ -36,7 +36,7 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
         .state('app_views', {
             abstract: true,
             url: "/app_views",
-            templateUrl: "views/common/content.html",
+            templateUrl: "static/views/common/content.html",
             data: {
                 pageTitle: 'App Views'
             }
@@ -44,7 +44,7 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
 
         .state('app_views.search', {
             url: "/search",
-            templateUrl: "views/app_views/search.html",
+            templateUrl: "static/views/app_views/search.html",
             data: {
                 pageTitle: 'Library Search',
                 pageDesc: 'Search for an assay from the system libraries.'
@@ -60,14 +60,14 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
         .state('common', {
             abstract: true,
             url: "/common",
-            templateUrl: "views/common/content_empty.html",
+            templateUrl: "static/views/common/content_empty.html",
             data: {
                 pageTitle: 'Common'
             }
         })
         .state('common.login', {
             url: "/login",
-            templateUrl: "views/common_app/login.html",
+            templateUrl: "static/views/common_app/login.html",
             data: {
                 pageTitle: 'Login page',
                 specialClass: 'blank'

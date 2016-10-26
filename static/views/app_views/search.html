@@ -1,0 +1,144 @@
+<div class="row">
+    <div class="col-md-3">
+        
+        <!--Search filters-->
+        <div class="hpanel">
+            <div class="panel-body">
+                <form method="post" class="form">
+                    <div class="m-b-md">
+                        <h4>
+                            Filters
+                        </h4>
+                        <small>
+                        Filter your assay (optional)
+                    </small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="checkbox checkbox-success">
+                                <input id="removeFilters" type="checkbox" ng-model="searchCtrl.removeFilters">
+                                <label for="removeFilters">
+                                Remove Filters
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-hide="searchCtrl.removeFilters">
+                        <label class="control-label">Winpath:</label>
+                        <div class="input-group">
+                            <ui-select multiple ng-model="searchCtrl.selectedSystems" theme="bootstrap" ng-disabled="disabled">
+                                <ui-select-match placeholder="Select systems...">{{ $item }}</ui-select-match>
+                                <ui-select-choices repeat="systems in searchCtrl.allSystems | filter:$select.search">
+                                    {{ systems }}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-hide="searchCtrl.removeFilters">
+                        <label class="control-label">Sample:</label>
+                        <div class="input-group">
+                            <select class="form-control m-b"
+                                    ng-model="searchCtrl.selectedSamples" 
+                                    ng-init="searchCtrl.selectedSamples = searchCtrl.allSamples[0]"
+                                    ng-options="option for option in searchCtrl.allSamples">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-hide="searchCtrl.removeFilters">
+                        <label class="control-label">Options:</label>
+                        <div class="input-group">
+                            <div class="checkbox checkbox-success">
+                                <input checked id="checkbox1" type="checkbox" ng-model="searchCtrl.useAlias">
+                                <label for="checkbox1">
+                                Use Alias Table
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="col-md-9">
+        
+        <!--Search text box-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="hpanel">
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input ng-model="searchCtrl.searchText" class="form-control" type="text" placeholder="Search assays..">
+                            <div class="input-group-btn">
+                                <button ng-click="searchCtrl.submit()" class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!--Search results-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="hpanel">
+                    <div class="panel-body">
+                        
+                        <pre>{{ searchCtrl.data.count }}<br>{{ searchCtrl.data.next }}<br>{{ searchCtrl.data.prev }}<br>{{ searchCtrl.data.results }}</pre>
+                        
+                        <div class="table-responsive">
+                            <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Origin</th>
+                                        <th>TLC</th>
+                                        <th>Name</th>
+                                        <th>Sample</th>
+                                        <th>Destination</th>
+                                        <th>Winpath</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="row in searchCtrl.data.results">
+                                        <td>{{ row.origin }}</td>
+                                        <td>{{ row.tlc }}</td>
+                                        <td>{{ row.tlcname }}</td>
+                                        <td>Schottdorf</td>
+                                        <td>TDL</td>
+                                        <td></td>
+                                    </tr>
+                                    <!--<tr>-->
+                                    <!--    <td>Copper</td>-->
+                                    <!--    <td>Urine</td>-->
+                                    <!--    <td>Sheffield</td>-->
+                                    <!--    <td>Royal Free</td>-->
+                                    <!--    <td class="text-center"><i class="fa fa-dollar text-danger"></i></td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                    <!--    <td>Copper</td>-->
+                                    <!--    <td>Serum</td>-->
+                                    <!--    <td>Trace Metal Unit, PHE</td>-->
+                                    <!--    <td>TDL</td>-->
+                                    <!--    <td class="text-center"><button class="btn btn-primary btn-xs">EDIT</button></td>-->
+                                    <!--</tr>-->
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--Close Results Table-->
+
+        </div>
+
+    </div>
+</div>
