@@ -50,9 +50,9 @@ from knox.auth import TokenAuthentication
 
 
 class ListTLC(generics.ListAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.SearchPage_Serializer
+    #authentication_classes = (TokenAuthentication,)
+    #permission_classes = (IsAuthenticated,)
+    #serializer_class = serializers.SearchPage_Serializer
 
     def get_queryset(self):
         print(self.request.query_params.get('search_text'))
