@@ -50,9 +50,9 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
                 pageDesc: 'Search for an assay from the system libraries.'
             },
             controller: 'searchCtrl as searchCtrl',
-            //resolve: {
-            // auth: _redirectIfNotAuthenticated
-            //}
+            resolve: {
+                auth: _redirectIfNotAuthenticated
+            }
         })
         
         

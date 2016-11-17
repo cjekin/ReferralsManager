@@ -8,6 +8,7 @@ urlpatterns = [
     
     url(r'auth/', include('knox.urls')),
     
+    
     #url(r'^auth/login/$', csrf_exempt(views.FakeAuth.as_view()), name='login_view'),
     
     url(r'^tlcs/$', views.ListCreateTLC.as_view(), name='tlc_list'),

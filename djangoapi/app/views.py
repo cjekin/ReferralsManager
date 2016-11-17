@@ -49,17 +49,40 @@ from knox.auth import TokenAuthentication
 #
 
 
-class ListTLC(generics.ListAPIView):
-    #authentication_classes = (TokenAuthentication,)
-    #permission_classes = (IsAuthenticated,)
-    #serializer_class = serializers.SearchPage_Serializer
+# class ListTLC(generics.ListAPIView):
+#     #authentication_classes = (TokenAuthentication,)
+#     #permission_classes = (IsAuthenticated,)
+#     serializer_class = serializers.SearchPage_Serializer
 
-    def get_queryset(self):
-        print(self.request.query_params.get('search_text'))
-        search_text = self.request.query_params.get('search_text', '')
-        return models.TLC.objects.filter(
-            Q(tfcs__map__loinc__RELATEDNAMES2__icontains=search_text) | Q(tlcname__icontains=search_text)
-        ).distinct()
+#     def get_queryset(self):
+#         for k in self.request:
+#             print(k)
+#         #with open('apirequestlog.txt','w') as F:
+#         #    F.write(str(self.request))
+#         search_text = self.request.query_params.get('search_text', '')
+#         return models.TLC.objects.filter(
+#             Q(tfcs__map__loinc__RELATEDNAMES2__icontains=search_text) | Q(tlcname__icontains=search_text)
+#         ).distinct()
+        
+        
+class ListTLC(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    
+    def get(self, request, format=None):
+        tlcs = models.TLC.objects.all() #.filter(id=self.kwargs['pk'])
+        serializer = serializers.TLC_Serializer(tlcs, many=False)
+        return Response(serializer.data)
+        
+    def post(self, request, format=None):
+        print(request)
+        serializer = serializers.TLC_Serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        
+
         
     
 
@@ -125,16 +148,3 @@ class RetrieveUpdateDestroyForm(generics.ListCreateAPIView):
 #        print(self.request.META.get('HTTP_SECRET_KEY', None))
 #    
 
-# class ListCreateTLCFull(APIView):
-    
-#     def get(self, request, format=None):
-#         tlcs = models.TLC.objects.all() #.filter(id=self.kwargs['pk'])
-#         serializer = serializers.TLC_Serializer(tlcs, many=False)
-#         return Response(serializer.data)
-        
-#     def post(self, request, format=None):
-#         print(request)
-#         serializer = serializers.TLC_Serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
