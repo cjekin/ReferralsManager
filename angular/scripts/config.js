@@ -99,14 +99,18 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
 
 
 function _redirectIfNotAuthenticated($q, $state, $timeout, authService) {
-    var userInfo = authService.isAuthenticated();
-    console.log('userInfo', userInfo);
+    //var userInfo = authService.isAuthenticated();
+    authService.isAuthenticated().then(function(response){
+        console.log('isAuthenticated returned: ', response);
+    });
+    
     if (userInfo) {
         return $q.when(userInfo);
     }
     else {
         $timeout(function() {
-            $state.go('common.login');
+            console.log('Not authenticated');
+            //$state.go('common.login');
         });
         return $q.reject({
             authenticated: false

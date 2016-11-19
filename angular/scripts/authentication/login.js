@@ -30,10 +30,21 @@ function authService($http, $q, $window) {
         var deferred = $q.defer();
         var queryURL = loginURL;
 
-        $http.defaults.headers.common['Authorization'] = 'Basic ' + window.btoa(username + ':' + password);
-        $http.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+        //$http.defaults.headers.common['Authorization'] = 'Basic ' + window.btoa(username + ':' + password);
+        //$http.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
-        $http.post(queryURL)
+        var req = {
+            method: 'POST',
+            url: queryURL,
+            headers: {
+                'Content-Type': undefined
+            },
+            data: { username: username, password: password }
+        };
+        
+        console.log(req);
+
+        $http.post(queryURL, {username:username, password:password})
             .then(function(result) {
                 session = result.data;
                 $http.defaults.headers.common['Authorization'] = '';
@@ -50,12 +61,20 @@ function authService($http, $q, $window) {
 
 
     authService.isAuthenticated = function() {
+        console.log('Called isAuthenticated');
         if (session.token) {
-            return session.user;
-        } else if($window.sessionStorage["session"]) {
-            session = $window.sessionStorage["session"];
-            return session.user;
+            console.log('Found an active session token');
+            $http.post('api/v1/auth/refresh/', {token: session.token})
+                .then(function(result){
+                    console.log('Good', result);
+                    return session.user;
+                }, function(error){
+                    console.log('Problem', error);
+                    return false;
+                })
+            
         } else {
+            console.log('No session found');
             return false;   
         }
     };

@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'corsheaders',
     'rest_framework',
-    'knox',
+    #'knox',
     'rest_framework.authtoken',
     'django_extensions',
     'app',
@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'djangoapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'GlobalCodes_New',
+        'NAME': 'GlobalCodes',
         'USER': 'djangouser',
         'PASSWORD': 'refmanadmin',
         'HOST': 'localhost',
@@ -212,13 +212,25 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        #'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 30,
+}
+
+def jwt_response_payload_handler(token, user=None, request=None):
+    return {
+        'token': token,
+        'user': UserSerializer(user, context={'request': request}).data
+    }
+    
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'app.views.jwt_response_payload_handler',
+    'JWT_ALLOW_REFRESH': True,
 }
 
 
