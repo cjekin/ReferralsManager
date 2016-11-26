@@ -19,6 +19,8 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
 
     // Set default state
     $urlRouterProvider.otherwise("/dashboard");
+    
+    // Routing
     $stateProvider
 
         // Dashboard - Main page
@@ -32,7 +34,6 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
     
 
         // App views
-
         .state('app_views', {
             abstract: true,
             url: "/app_views",
@@ -51,7 +52,13 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
             },
             controller: 'searchCtrl as searchCtrl',
             resolve: {
-                auth: _redirectIfNotAuthenticated
+                //auth: checkIfAuthenticated
+                auth: function checkIfAuthenticated(authService, $state) {
+                    console.log('Called checkIfAuthenticated');
+                    authService.isAuthenticated();
+                    //setTimeout(()=>{$state.go('common.login')},0);
+                    return true;
+                }
             }
         })
         
@@ -80,43 +87,49 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
 }
 
 
+function checkIfAuthenticated(authService, $state) {
+    console.log('Called checkIfAuthenticated');
+    authService.isAuthenticated();
+    //setTimeout(()=>{$state.go('common.login')},0);
+}
 
 
 
-// function _redirectIfNotAuthenticated($q, $state, $auth) {
-//     var defer = $q.defer();
-//     if (authService.getSessionToken()) {
-//         defer.resolve(); /* (3) */
-//     }
-//     else {
-//         $timeout(function() {
-//             $state.go('login'); /* (4) */
-//         });
-//         defer.reject();
-//     }
-//     return defer.promise;
-// }
 
-
-function _redirectIfNotAuthenticated($q, $state, $timeout, authService) {
-    //var userInfo = authService.isAuthenticated();
-    authService.isAuthenticated().then(function(response){
-        console.log('isAuthenticated returned: ', response);
-    });
-    
-    if (userInfo) {
-        return $q.when(userInfo);
+function _redirectIfNotAuthenticated($q, $state, $auth) {
+    var defer = $q.defer();
+    if (authService.getSessionToken()) {
+        defer.resolve(); /* (3) */
     }
     else {
         $timeout(function() {
-            console.log('Not authenticated');
-            //$state.go('common.login');
+            $state.go('login'); /* (4) */
         });
-        return $q.reject({
-            authenticated: false
-        });
+        defer.reject();
     }
+    return defer.promise;
 }
+
+
+// function _redirectIfNotAuthenticated($q, $state, $timeout, authService) {
+//     //var userInfo = authService.isAuthenticated();
+//     authService.isAuthenticated().then(function(response){
+//         console.log('isAuthenticated returned: ', response);
+//     });
+    
+//     if (userInfo) {
+//         return $q.when(userInfo);
+//     }
+//     else {
+//         $timeout(function() {
+//             console.log('Not authenticated');
+//             //$state.go('common.login');
+//         });
+//         return $q.reject({
+//             authenticated: false
+//         });
+//     }
+// }
 
 
 

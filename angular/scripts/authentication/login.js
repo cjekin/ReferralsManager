@@ -5,16 +5,16 @@
 
 angular.module('homer')
     .factory('authService', authService)
+    .controller('loginCtrl', loginCtrl)
     //.factory('authInterceptor', authInterceptor)
     //.config(['$httpProvider', function($httpProvider) {
     //    $httpProvider.interceptors.push('authInterceptor');
     //}])
-    .controller('loginCtrl', loginCtrl)
       
 
 authService.$inject = ['$http', '$q', '$window'];
-//authInterceptor.$inject = ['$q', 'authService'];
 loginCtrl.$inject = ['$timeout', '$state', 'authService'];
+//authInterceptor.$inject = ['$q', 'authService'];
 
 
 function authService($http, $q, $window) {
@@ -61,7 +61,7 @@ function authService($http, $q, $window) {
 
 
     authService.isAuthenticated = function() {
-        console.log('Called isAuthenticated');
+        console.log('Called isAuthenticated', session.token);
         if (session.token) {
             console.log('Found an active session token');
             $http.post('api/v1/auth/refresh/', {token: session.token})
