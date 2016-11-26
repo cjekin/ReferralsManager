@@ -4,6 +4,7 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
+import datetime
 
 from django.db.models import Q
 from . import models
@@ -18,7 +19,8 @@ from . import serializers
 def jwt_response_payload_handler(token, user=None, request=None):
     return {
         'token': token,
-        'user': serializers.UserSerializer(user, context={'request': request}).data
+        'user': serializers.UserSerializer(user, context={'request': request}).data,
+        'expiry': datetime.datetime.now() + datetime.timedelta(seconds=300)
     }
 
 class ListTLC(APIView):

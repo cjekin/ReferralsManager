@@ -6,9 +6,6 @@ from . import views
 
 urlpatterns = [
     
-    
-    #url(r'auth/', include('knox.urls')),
-    
     url(r'^auth/login/', obtain_jwt_token),
     url(r'^auth/refresh/', refresh_jwt_token),
     

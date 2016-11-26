@@ -9,6 +9,17 @@ angular
     .config(configState)
     .run(function($rootScope, $state) {
         $rootScope.$state = $state;
+        $rootScope.$on('$stateChangeSuccess', function(event, to, toParams, from, fromParams) {
+            console.log('*** $stateChangeSuccess: ', from);
+            $rootScope.$previousState = from;
+        });
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            //if (notLoggedIn) {
+            //    event.preventDefault();
+            //    $state.go('login');
+            //}
+            console.log('*** $stateChangeStart: ', fromState, toState);
+        });
     });
     
 
@@ -46,21 +57,39 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
         .state('app_views.search', {
             url: "/search",
             templateUrl: "static/views/app_views/search.html",
+            controller: 'searchCtrl as searchCtrl',
             data: {
                 pageTitle: 'Library Search',
-                pageDesc: 'Search for an assay from the system libraries.'
+                pageDesc: 'Search for an assay from the system libraries.',
+                allowedGroups: ['labadmin']
             },
-            controller: 'searchCtrl as searchCtrl',
             resolve: {
-                //auth: checkIfAuthenticated
-                auth: function checkIfAuthenticated(authService, $state) {
-                    console.log('Called checkIfAuthenticated');
-                    authService.isAuthenticated();
-                    //setTimeout(()=>{$state.go('common.login')},0);
-                    return true;
-                }
+                auth: checkIfAuthorized
             }
         })
+        
+        
+        // Result from CodeMentor session 26/11/16 with James (Working)
+        // .state('app_views.search', {
+        //     url: "/search",
+        //     templateUrl: "static/views/app_views/search.html",
+        //     data: {
+        //         pageTitle: 'Library Search',
+        //         pageDesc: 'Search for an assay from the system libraries.'
+        //     },
+        //     controller: 'searchCtrl as searchCtrl',
+        //     resolve: {
+        //         auth: function checkIfAuthenticated(authService, $state) {
+        //             console.log('Called checkIfAuthenticated');
+        //             return authService.isAuthorized().then(function(result){
+        //                 return true;
+        //             }, function(error){
+        //                 setTimeout(()=>{$state.go('common.login')},0);
+        //                 return false;
+        //             });
+        //         }
+        //     }
+        // })
         
         
         // Common views
@@ -79,6 +108,9 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
                 pageTitle: 'Login page',
                 specialClass: 'blank'
             },
+            params: { 
+              'toState': 'dashboard', // default state to proceed to after login
+            },
             controller: 'loginCtrl',
             controllerAs: 'loginCtrl'
         })
@@ -87,61 +119,27 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
 }
 
 
-function checkIfAuthenticated(authService, $state) {
-    console.log('Called checkIfAuthenticated');
-    authService.isAuthenticated();
-    //setTimeout(()=>{$state.go('common.login')},0);
-}
 
-
-
-
-function _redirectIfNotAuthenticated($q, $state, $auth) {
-    var defer = $q.defer();
-    if (authService.getSessionToken()) {
-        defer.resolve(); /* (3) */
-    }
-    else {
-        $timeout(function() {
-            $state.go('login'); /* (4) */
-        });
-        defer.reject();
-    }
-    return defer.promise;
-}
-
-
-// function _redirectIfNotAuthenticated($q, $state, $timeout, authService) {
-//     //var userInfo = authService.isAuthenticated();
-//     authService.isAuthenticated().then(function(response){
-//         console.log('isAuthenticated returned: ', response);
-//     });
+function checkIfAuthorized(authService, $state, $rootScope) {
+    console.log('Called checkIfAuthorized', $state);
+    var allowedGroups = this.data.allowedGroups;
+    var thisStateName = this.self.name;
     
-//     if (userInfo) {
-//         return $q.when(userInfo);
-//     }
-//     else {
-//         $timeout(function() {
-//             console.log('Not authenticated');
-//             //$state.go('common.login');
-//         });
-//         return $q.reject({
-//             authenticated: false
-//         });
-//     }
-// }
+    return authService.isAuthorized(allowedGroups).then(function(result) {
+        return true;
+    }, function(error) {
+        console.log('authService returned error', error);
+        if(error.error == 'permission_denied'){
+            console.log($rootScope.$previousState.name);
+            //$state.go($rootScope.$previousState.name);
+            alert(error.message);
+        } else {
+            setTimeout(() => {
+                $state.go('common.login', {'toState': thisStateName});
+            }, 0);
+        }
+        return false;
+    });
+}
 
 
-
-
-// ['$q', '$state', '$timeout', 'authService', function ($q, $state, $timeout, authService) {
-//                   var userInfo = authService.getCurrentUser();
-//                   if (userInfo){
-//                       return $q.when(userInfo);
-//                   } else {
-//                       $timeout(function() {
-//                           $state.go('common.login');
-//                       });
-//                       return $q.reject({ authenticated: false });
-//                   }
-//               }]

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from . import models
 
@@ -8,11 +8,18 @@ from . import models
 # Auth and permissions
 #
 
+
+# class GroupSerializer(serializers.ModelSerializer):    
+#     class Meta:
+#         model = Group
+#         fields = ('name',)
+
 class UserSerializer(serializers.ModelSerializer):
+    groups = serializers.StringRelatedField(many=True)
+    #groups = GroupSerializer(many=True)
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email','is_staff', 'is_superuser', 'is_active', 'date_joined',)
-        read_only_fields = ('is_staff', 'is_superuser', 'is_active', 'date_joined',)
+        fields = ('first_name', 'last_name', 'email', 'groups',)
  
     #def restore_object(self, attrs, instance=None):
     #    # call set_password on user object. Without this
