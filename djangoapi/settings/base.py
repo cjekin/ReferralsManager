@@ -24,9 +24,6 @@ FRONTEND_DIR = os.path.join(PROJECT_DIR,'angular')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','@=*9wadw4!&a7#^q^zlc#=zd1o0jyi=ji=#3(2k^!#z*6675z2')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -42,7 +39,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'corsheaders',
     'rest_framework',
-    #'knox',
     'rest_framework.authtoken',
     'django_extensions',
     'app',
@@ -62,54 +58,24 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'djangoapi.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [],
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
 
 WSGI_APPLICATION = 'djangoapi.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'GlobalCodes',
-        'USER': 'djangouser',
-        'PASSWORD': 'refmanadmin',
-        'HOST': 'localhost',
-        'PORT': '3306'
-    }
-}
-
-# django-pyodbc-azure settings
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'sql_server.pyodbc',
-#         'NAME': 'GlobalCodes',
-#         'USER': 'djangouser',
-#         'PASSWORD': 'refmanadmin',
-#         'HOST': 'localhost\\SQLEXPRESS',
-#         'PORT': '',
-
-#         'OPTIONS': {
-#             'driver': 'ODBC Driver 13 for SQL Server',
-#         },
-#     },
-# }
 
 
 # Password validation
@@ -222,11 +188,11 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 30,
 }
 
-def jwt_response_payload_handler(token, user=None, request=None):
-    return {
-        'token': token,
-        'user': UserSerializer(user, context={'request': request}).data
-    }
+# def jwt_response_payload_handler(token, user=None, request=None):
+#     return {
+#         'token': token,
+#         'user': UserSerializer(user, context={'request': request}).data
+#     }
     
 JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'app.views.jwt_response_payload_handler',

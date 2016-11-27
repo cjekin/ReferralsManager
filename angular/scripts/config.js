@@ -26,34 +26,59 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
     $compileProvider.debugInfoEnabled(true);
 
     // Set default state
-    $urlRouterProvider.otherwise("/dashboard");
+    $urlRouterProvider.otherwise("/pages/dashboard");
     
     // Routing
     $stateProvider
 
-        // Dashboard - Main page
-        .state('dashboard', {
-            url: "/dashboard",
-            templateUrl: "static/views/dashboard.html",
+        // Blank page views
+        .state('root', {
+            abstract: true,
+            url: "/common",
+            templateUrl: "static/pages/app_views/blankpage.html",
             data: {
-                pageTitle: 'Dashboard',
+                pageTitle: 'Common'
             }
         })
-    
+        .state('root.login', {
+            url: "/login",
+            templateUrl: "static/pages/auth/login.html",
+            data: {
+                pageTitle: 'Login page',
+                pageDesc: 'Search for an assay from the system libraries.'
+            },
+            params: { 
+              'toState': 'pages.dashboard', // default state to proceed to after login
+              'errorMessages': ''
+            },
+            controller: 'loginCtrl as loginCtrl'
+        })
 
-        // App views
-        .state('app_views', {
+
+        // App views (headers and footers)
+        .state('pages', {
             abstract: true,
-            url: "/app_views",
-            templateUrl: "static/views/common/content.html",
+            url: "/pages",
+            templateUrl: "static/pages/app_views/content.html",
             data: {
                 pageTitle: 'App Views'
             }
         })
 
-        .state('app_views.search', {
+        // Dashboard - Main page
+        .state('pages.dashboard', {
+            url: "/dashboard",
+            templateUrl: "static/pages/dashboard/dashboard.html",
+            data: {
+                pageTitle: 'Welcome to HSL Assay Finder',
+                //pageDesc: 'Search for an assay from the system libraries.',
+            }
+        })
+    
+        // Search page
+        .state('pages.search', {
             url: "/search",
-            templateUrl: "static/views/app_views/search.html",
+            templateUrl: "static/pages/search/search.html",
             controller: 'searchCtrl as searchCtrl',
             data: {
                 pageTitle: 'Library Search',
@@ -66,27 +91,7 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
         })
         
         
-        // Common views
-        .state('common', {
-            abstract: true,
-            url: "/common",
-            templateUrl: "static/views/common/content_empty.html",
-            data: {
-                pageTitle: 'Common'
-            }
-        })
-        .state('common.login', {
-            url: "/login",
-            templateUrl: "static/views/common_app/login.html",
-            data: {
-                pageTitle: 'Login page',
-                pageDesc: 'Search for an assay from the system libraries.'
-            },
-            params: { 
-              'toState': 'dashboard', // default state to proceed to after login
-            },
-            controller: 'loginCtrl as loginCtrl'
-        })
+        
 
 
 }
@@ -107,7 +112,7 @@ function checkIfAuthorized(authService, $state, $rootScope) {
             alert(error.message);
         } else {
             setTimeout(() => {
-                $state.go('common.login', {'toState': thisStateName});
+                $state.go('root.login', {'toState': thisStateName, 'errorMessages': error.message});
             }, 0);
         }
         return false;

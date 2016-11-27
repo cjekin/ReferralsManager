@@ -10,7 +10,6 @@ from django.db.models import Q
 from . import models
 from . import serializers
 
-#from knox.auth import TokenAuthentication
 
 #
 # Authentication and security
@@ -23,13 +22,18 @@ def jwt_response_payload_handler(token, user=None, request=None):
         'expiry': datetime.datetime.now() + datetime.timedelta(seconds=300)
     }
 
+
+#
+# Assay Search View
+#
+
 class ListTLC(APIView):
     authentication_classes = (BasicAuthentication, JSONWebTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     
     def get(self, request, format=None):
         tlcs = models.TLC.objects.all() #.filter(id=self.kwargs['pk'])
-        serializer = serializers.TLC_Serializer(tlcs, many=False)
+        serializer = serializers.TLC_Serializer(tlcs, many=True)
         return Response(serializer.data)
         
     def post(self, request, format=None):
@@ -39,10 +43,6 @@ class ListTLC(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        
-
-        
-    
 
 #
 # TLC detail page

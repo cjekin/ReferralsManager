@@ -8,15 +8,8 @@ from . import models
 # Auth and permissions
 #
 
-
-# class GroupSerializer(serializers.ModelSerializer):    
-#     class Meta:
-#         model = Group
-#         fields = ('name',)
-
 class UserSerializer(serializers.ModelSerializer):
     groups = serializers.StringRelatedField(many=True)
-    #groups = GroupSerializer(many=True)
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'groups',)
@@ -93,7 +86,8 @@ class TLC_Serializer(serializers.ModelSerializer):
     
     class Meta: 
         fields = (
-            'id','origin', 'tlc', 'tlctype','fixedprice','printlabel','specifiedprof',
+            'id','origin', 'tlc', 
+            'tlctype','fixedprice','printlabel','specifiedprof',
             'securitylevel','queryflag','tlcname','fee1',
             'tfcs'
             )

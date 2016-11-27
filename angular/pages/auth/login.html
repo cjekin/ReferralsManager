@@ -22,7 +22,7 @@
                                 <label class="control-label" for="password">Password</label>
                                 <input ng-model="loginCtrl.password" type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control">
                                 <!--<span class="help-block small">Please pick a strong password</span>-->
-                                <span class="help-block small text-danger" ng-show="loginCtrl.passworderror"><i class="fa fa-exclamation-triangle"></i>Not a valid password</span>
+                                <span class="help-block small text-danger" ng-show="loginCtrl.passworderror"><i class="fa fa-exclamation-triangle"></i>{{ loginCtrl.passworderror }}</span>
                             </div>
                             <button type="submit" ng-disabled="form.$invalid || loginCtrl.dataLoading" class="btn btn-success btn-block">Login</button>
                             <!--<button ng-click="loginCtrl.login()" class="btn btn-success btn-block">Login</button>-->
