@@ -7,20 +7,17 @@
 angular
     .module('homer')
     .config(configState)
-    .run(function($rootScope, $state) {
+    .run(['$rootScope', '$state', 'authService', function($rootScope, $state, authService) {
         $rootScope.$state = $state;
-        $rootScope.$on('$stateChangeSuccess', function(event, to, toParams, from, fromParams) {
-            console.log('*** $stateChangeSuccess: ', from);
-            $rootScope.$previousState = from;
-        });
-        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            //if (notLoggedIn) {
-            //    event.preventDefault();
-            //    $state.go('login');
-            //}
-            console.log('*** $stateChangeStart: ', fromState, toState);
-        });
-    });
+        // $rootScope.$on('$stateChangeSuccess', function(event, to, toParams, from, fromParams) {
+        //     console.log('*** $stateChangeSuccess: ', from);
+        //     $rootScope.$previousState = from;
+        // });
+        // $rootScope.$on('$stateChangeStart', function (fromState, toState, $state, authService) {
+        //     console.log('*** $stateChangeStart: ', fromState, toState);
+        //     checkIfAuthorized2(fromState, toState, $state, authService);
+        // });
+    }]);
     
 
 function configState($stateProvider, $urlRouterProvider, $compileProvider) {
@@ -62,34 +59,11 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
                 pageTitle: 'Library Search',
                 pageDesc: 'Search for an assay from the system libraries.',
                 allowedGroups: ['labadmin']
-            },
-            resolve: {
+            }
+            ,resolve: {
                 auth: checkIfAuthorized
             }
         })
-        
-        
-        // Result from CodeMentor session 26/11/16 with James (Working)
-        // .state('app_views.search', {
-        //     url: "/search",
-        //     templateUrl: "static/views/app_views/search.html",
-        //     data: {
-        //         pageTitle: 'Library Search',
-        //         pageDesc: 'Search for an assay from the system libraries.'
-        //     },
-        //     controller: 'searchCtrl as searchCtrl',
-        //     resolve: {
-        //         auth: function checkIfAuthenticated(authService, $state) {
-        //             console.log('Called checkIfAuthenticated');
-        //             return authService.isAuthorized().then(function(result){
-        //                 return true;
-        //             }, function(error){
-        //                 setTimeout(()=>{$state.go('common.login')},0);
-        //                 return false;
-        //             });
-        //         }
-        //     }
-        // })
         
         
         // Common views
@@ -106,13 +80,12 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
             templateUrl: "static/views/common_app/login.html",
             data: {
                 pageTitle: 'Login page',
-                specialClass: 'blank'
+                pageDesc: 'Search for an assay from the system libraries.'
             },
             params: { 
               'toState': 'dashboard', // default state to proceed to after login
             },
-            controller: 'loginCtrl',
-            controllerAs: 'loginCtrl'
+            controller: 'loginCtrl as loginCtrl'
         })
 
 
@@ -121,7 +94,7 @@ function configState($stateProvider, $urlRouterProvider, $compileProvider) {
 
 
 function checkIfAuthorized(authService, $state, $rootScope) {
-    console.log('Called checkIfAuthorized', $state);
+    console.log('Called checkIfAuthorized');
     var allowedGroups = this.data.allowedGroups;
     var thisStateName = this.self.name;
     
@@ -130,8 +103,7 @@ function checkIfAuthorized(authService, $state, $rootScope) {
     }, function(error) {
         console.log('authService returned error', error);
         if(error.error == 'permission_denied'){
-            console.log($rootScope.$previousState.name);
-            //$state.go($rootScope.$previousState.name);
+            $state.go('dashboard');
             alert(error.message);
         } else {
             setTimeout(() => {
@@ -141,5 +113,4 @@ function checkIfAuthorized(authService, $state, $rootScope) {
         return false;
     });
 }
-
 

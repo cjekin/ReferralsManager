@@ -33,6 +33,10 @@ function authService($http, $q, $window) {
     }
     
     function checkGroupIsAuthorized(usergroups, allowedgroups){
+        if(!usergroups){
+            console.log('User session is undefined');
+            return false;
+        }
         var matchingGroups = [];
         for(i=0;i<allowedgroups.length;i++){
             for(j=0;j<usergroups.length;j++){
@@ -72,18 +76,43 @@ function authService($http, $q, $window) {
 
         return deferred.promise;
     };
+    
+    
+    function refreshToken(session) {
+        $http.post('api/v1/auth/refresh/', { token: session.token })
+            .then(function(result) {
+                session = result.data;
+                console.log('Refreshed session token', session);
+                $window.sessionStorage["session"] = JSON.stringify(session);
+            }, function(error) {
+                console.log('Error refreshing token: ', error);
+            });
+    }
 
     
     authService.isAuthorized = function(allowedGroups) {
         var deferred = $q.defer();
         
-        console.log('Called isAuthorized', allowedGroups);
+        console.log('Called isAuthorized');
             
         // If there isn't a session in memory, check the local storage
-        session = (session || JSON.parse($window.sessionStorage["session"]));
+        console.log('Session: ', session);
+        console.log('Local stored session: ', $window.sessionStorage["session"]);
+        if(!session && $window.sessionStorage["session"]){
+            console.log('Getting session from window');
+            session = JSON.parse($window.sessionStorage["session"]);    
+        }
         
-        var userGroupAuthorised = checkGroupIsAuthorized(session.user.groups, allowedGroups);
+        // Check the user has the right privilages
+        if(session){
+            var userGroupAuthorised = checkGroupIsAuthorized(session.user.groups, allowedGroups);
+            console.log('User group authorised');
+        } else {
+            console.log('User group not authorised');
+            userGroupAuthorised = false;
+        }
         
+
         if (session && session.token && isTokenCurrent) {
             $http.post('api/v1/auth/refresh/', {token: session.token})
                 .then(function(result){
@@ -120,31 +149,6 @@ function authService($http, $q, $window) {
         }
         return deferred.promise;
     };
-    
-    // Result from CodeMentor session 26/11/16 with James (Working)
-    // authService.isAuthorized = function(allowedRoles) {
-    //     var deferred = $q.defer();
-        
-    //     console.log('Called isAuthorized', session);
-    //     if (session && session.token) {
-    //         console.log('Found an active session token', session.token);
-    //         $http.post('api/v1/auth/refresh/', {token: session.token})
-    //             .then(function(result){
-    //                 console.log('Good', result);
-                    
-    //                 session.token = result.token;
-    //                 deferred.resolve();
-    //             }, function(error){
-    //                 console.log('Problem', error);
-    //                 deferred.reject(error);
-    //             });
-    //     } else {
-    //         console.log('No session found');
-    //         deferred.reject('No session found');
-    //     }
-    //     console.log('Exiting isAuthenticated function');
-    //     return deferred.promise;
-    // };
     
     return authService
 }
